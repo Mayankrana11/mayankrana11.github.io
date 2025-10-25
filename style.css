@@ -120,17 +120,32 @@ header h1 {
   margin: 0 auto;
 }
 
+.about-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+}
+
 .about-image img {
-  width: 300px;
-  height: 300px;
-  object-fit: cover;
+  width: 320px;
+  height: 320px;
+  object-fit: contain; /* was cover */
+  object-position: center top; /* shows more of face */
   border-radius: 50%;
   filter: grayscale(100%);
-  border: 3px solid #333;
-  box-shadow: 0 0 25px rgba(255, 255, 255, 0.05);
+  border: 2px solid #555;
+  box-shadow: 0 0 40px rgba(255, 255, 255, 0.08);
+  transition: all 0.5s ease;
+}
+
+.about-image img:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 50px rgba(255, 255, 255, 0.15);
 }
 
 .about-text {
+  flex: 1;
   max-width: 500px;
   text-align: left;
 }
@@ -139,6 +154,7 @@ header h1 {
   font-size: 3rem;
   color: #f5f5f5;
   margin-bottom: 15px;
+  font-weight: 700;
 }
 
 .about-intro {
@@ -169,6 +185,7 @@ section h2 {
   text-transform: uppercase;
 }
 
+/* ===== PROJECTS ===== */
 .project-card {
   background-color: rgba(26, 26, 26, 0.8);
   border: 1px solid #333;
@@ -183,6 +200,7 @@ section h2 {
   box-shadow: 0px 4px 20px rgba(255, 255, 255, 0.05);
 }
 
+/* ===== SKILLS ===== */
 #skills ul {
   list-style: none;
   display: flex;
@@ -198,6 +216,7 @@ section h2 {
   border: 1px solid #333;
 }
 
+/* ===== FOOTER ===== */
 footer {
   background-color: rgba(17, 17, 17, 0.9);
   padding: 20px;
@@ -212,8 +231,8 @@ footer {
     flex-direction: column;
   }
   .about-image img {
-    width: 250px;
-    height: 250px;
+    width: 260px;
+    height: 260px;
   }
   .about-text {
     text-align: center;
