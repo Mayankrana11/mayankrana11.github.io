@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact | Mayank Rana</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <!-- ===== PARTICLE BACKGROUND ===== -->
+  <canvas id="particleCanvas" aria-hidden="true"></canvas>
+
+  <!-- ===== NAVBAR (Back to home) ===== -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <h1 class="logo">Mayank Rana</h1>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ===== CONTACT PAGE ===== -->
+  <div class="contact-page">
+    <div class="contact-container">
+      <h1>Get In Touch</h1>
+      <p class="contact-subtext">
+        Have a question, feedback, or a project in mind?  
+        Fill out the form below 👇
+      </p>
+
+      <form action="#" method="POST" class="contact-form">
+        <label for="name">Your Name</label>
+        <input type="text" id="name" name="name" placeholder="Enter your name" required />
+
+        <label for="email">Your Email</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email" required />
+
+        <label for="message">Your Message</label>
+        <textarea id="message" name="message" rows="5" placeholder="Write your message..." required></textarea>
+
+        <button type="submit" class="send-btn">Send Message</button>
+      </form>
+
+      <a href="index.html" class="back-link">← Back to Portfolio</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 Mayank Rana | All Rights Reserved</p>
+  </footer>
+
+  <!-- Include same particles + scroll JS -->
+  <script src="script.js"></script>
+</body>
+</html>
