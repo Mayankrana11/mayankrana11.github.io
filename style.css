@@ -22,7 +22,8 @@ body {
   width: 100%;
   height: 100%;
   z-index: 0;
-  background-color: #0a0a0a;
+  background-color: transparent;
+  pointer-events: none;
 }
 
 /* ===== NAVBAR ===== */
@@ -146,7 +147,7 @@ header h1 {
   line-height: 1.7;
 }
 
-/* ===== OTHER SECTIONS ===== */
+/* ===== PROJECTS ===== */
 section {
   max-width: 900px;
   margin: 0 auto;
@@ -162,7 +163,6 @@ section h2 {
   text-transform: uppercase;
 }
 
-/* ===== PROJECTS ===== */
 .project-card {
   background-color: rgba(26, 26, 26, 0.8);
   border: 1px solid #333;
@@ -191,6 +191,49 @@ section h2 {
   padding: 10px 20px;
   border-radius: 20px;
   border: 1px solid #333;
+}
+
+/* ===== CV DOWNLOAD ===== */
+.cv-section {
+  position: relative;
+  z-index: 10;
+  padding: 100px 20px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.02);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.cv-section h2 {
+  font-size: 2rem;
+  color: #f5f5f5;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.cv-section p {
+  color: #aaa;
+  font-size: 1.1rem;
+  margin-bottom: 25px;
+}
+
+.cv-button {
+  display: inline-block;
+  background: linear-gradient(90deg, #eee, #bbb);
+  color: #0a0a0a;
+  text-decoration: none;
+  padding: 14px 36px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 40px;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+}
+
+.cv-button:hover {
+  background: linear-gradient(90deg, #fff, #ccc);
+  transform: scale(1.05);
+  box-shadow: 0 0 25px rgba(255, 255, 255, 0.3);
 }
 
 /* ===== FOOTER ===== */
