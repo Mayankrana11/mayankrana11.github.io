@@ -1,80 +1,108 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mayank Rana | Portfolio</title>
-  <link rel="stylesheet" href="style.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-</head>
+/* ===== RESET ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-<body>
-  <!-- ===== HEADER ===== -->
-  <header>
-    <h1>Hi, I'm <span class="highlight">Mayank Rana</span> 👋</h1>
-    <p>B.Tech Student | Web Developer | Learner</p>
-  </header>
+/* ===== BODY ===== */
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #0a0a0a;
+  color: #f5f5f5;
+  line-height: 1.6;
+  text-align: center;
+}
 
-  <!-- ===== ABOUT ===== -->
-  <section id="about">
-    <h2>About Me</h2>
-    <p>
-      I’m a passionate B.Tech student who loves building projects, learning new technologies,
-      and creating meaningful digital experiences. I’m currently exploring web development and
-      data-driven applications.
-    </p>
-  </section>
+/* ===== HEADER ===== */
+header {
+  padding: 100px 20px 60px;
+  background: linear-gradient(135deg, #00bcd4, #2196f3);
+  color: #fff;
+}
 
-  <!-- ===== PROJECTS ===== -->
-  <section id="projects">
-    <h2>Projects</h2>
+header h1 {
+  font-size: 2.5rem;
+  font-weight: 600;
+}
 
-    <div class="project-card">
-      <h3>📊 Student Management System</h3>
-      <p>A Python + Flask web app to manage student data efficiently.</p>
-      <a href="https://github.com/mayankrana11/student-management" target="_blank">View on GitHub</a>
-    </div>
+.highlight {
+  color: #ffeb3b;
+}
 
-    <div class="project-card">
-      <h3>💬 Chatbot with PDF Reading</h3>
-      <p>A chatbot that reads from uploaded PDFs using Python and OpenAI API.</p>
-      <a href="https://github.com/mayankrana11/pdf-chatbot" target="_blank">View on GitHub</a>
-    </div>
+header p {
+  font-size: 1.1rem;
+  margin-top: 10px;
+}
 
-    <div class="project-card">
-      <h3>🎮 Krunker.io Extension</h3>
-      <p>A Chrome extension that enhances the Krunker.io experience with UI and features.</p>
-      <a href="https://github.com/mayankrana11/krunker-extension" target="_blank">View on GitHub</a>
-    </div>
-  </section>
+/* ===== SECTIONS ===== */
+section {
+  padding: 60px 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
 
-  <!-- ===== SKILLS ===== -->
-  <section id="skills">
-    <h2>Skills</h2>
-    <ul>
-      <li>HTML, CSS, JavaScript</li>
-      <li>Python, Flask</li>
-      <li>Git, GitHub</li>
-      <li>SQL, Firebase</li>
-    </ul>
-  </section>
+section h2 {
+  font-size: 2rem;
+  color: #00bcd4;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
 
-  <!-- ===== CONTACT ===== -->
-  <section id="contact">
-    <h2>Contact</h2>
-    <p>📧 <a href="mailto:mayankrana112002@gmail.com">mayankrana112002@gmail.com</a></p>
-    <p>🌐 <a href="https://github.com/mayankrana11" target="_blank">GitHub</a> |
-       <a href="https://linkedin.com/in/mayankrana11" target="_blank">LinkedIn</a>
-    </p>
-  </section>
+/* ===== PROJECT CARDS ===== */
+.project-card {
+  background-color: #1a1a1a;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px 0;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
 
-  <!-- ===== FOOTER ===== -->
-  <footer>
-    <p>© 2025 Mayank Rana | Built with 💙 and HTML/CSS/JS</p>
-  </footer>
+.project-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 4px 15px rgba(0, 188, 212, 0.3);
+}
 
-  <script src="script.js"></script>
-</body>
-</html>
+.project-card a {
+  color: #00bcd4;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.project-card a:hover {
+  text-decoration: underline;
+}
+
+/* ===== SKILLS ===== */
+#skills ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+#skills li {
+  background: #1a1a1a;
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: 1px solid #00bcd4;
+}
+
+/* ===== CONTACT ===== */
+#contact a {
+  color: #00bcd4;
+  text-decoration: none;
+}
+
+#contact a:hover {
+  text-decoration: underline;
+}
+
+/* ===== FOOTER ===== */
+footer {
+  background-color: #111;
+  padding: 20px;
+  color: #aaa;
+  font-size: 0.9rem;
+}
