@@ -1,48 +1,42 @@
-// robust, devicePixelRatio-aware particle network + smooth scroll
+// === Mayank Rana Portfolio Script ===
+// DevicePixelRatio-aware, high-density monochrome particle network + smooth scroll
 (function () {
   "use strict";
 
-  // ---- smooth scroll (unchanged) ----
+  // ---------- SMOOTH SCROLL ----------
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
+    anchor.addEventListener('click', e => {
       e.preventDefault();
-      const target = document.querySelector(this.getAttribute('href'));
+      const target = document.querySelector(anchor.getAttribute('href'));
       if (target) {
-        const offsetTop = Math.max(target.offsetTop - 70, 0);
-        smoothScrollTo(offsetTop, 900);
+        const start = window.pageYOffset;
+        const end = target.offsetTop - 70;
+        const distance = end - start;
+        const duration = 1000;
+        let startTime = null;
+
+        function easeInOutQuad(t) {
+          return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+        }
+
+        function step(currentTime) {
+          if (!startTime) startTime = currentTime;
+          const progress = Math.min((currentTime - startTime) / duration, 1);
+          const eased = easeInOutQuad(progress);
+          window.scrollTo(0, start + distance * eased);
+          if (progress < 1) requestAnimationFrame(step);
+        }
+
+        requestAnimationFrame(step);
       }
     });
   });
 
-  function smoothScrollTo(targetY, duration) {
-    const startY = window.pageYOffset;
-    const distanceY = targetY - startY;
-    let startTime = null;
-    function step(now) {
-      if (!startTime) startTime = now;
-      const progress = Math.min((now - startTime) / duration, 1);
-      const eased = easeInOutCubic(progress);
-      window.scrollTo(0, startY + distanceY * eased);
-      if (progress < 1) requestAnimationFrame(step);
-    }
-    requestAnimationFrame(step);
-  }
-  function easeInOutCubic(t) {
-    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-  }
-
-  // ---- particle system ----
+  // ---------- PARTICLE BACKGROUND ----------
   const canvas = document.getElementById("particleCanvas");
-  if (!canvas) {
-    console.error("particleCanvas element not found");
-    return;
-  }
-
+  if (!canvas) return;
   const ctx = canvas.getContext("2d");
-  if (!ctx) {
-    console.error("2D context unavailable");
-    return;
-  }
+  if (!ctx) return;
 
   let DPR = Math.max(window.devicePixelRatio || 1, 1);
   let width = 0, height = 0;
@@ -50,11 +44,10 @@
   const MAX_DISTANCE = 130;
   let animationId = null;
 
-  // choose high-density target like mobile
+  // consistent particle density
   function getParticleCountForSize(w, h) {
     const area = w * h;
-    // denser: 1 particle per 8000 px², capped at 220
-    return Math.min(Math.max(Math.floor(area / 8000), 80), 220);
+    return Math.min(Math.floor(area / 7500), 240); // denser
   }
 
   function resize() {
@@ -65,7 +58,7 @@
     canvas.style.height = height + "px";
     canvas.width = Math.floor(width * DPR);
     canvas.height = Math.floor(height * DPR);
-    ctx.setTransform(DPR, 0, 0, DPR, 0, 0); // handle hi-dpi
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
     initParticles();
   }
 
@@ -75,37 +68,33 @@
     animate();
   });
 
-  // particle class
   class Particle {
     constructor() {
       this.reset(true);
+      this.phase = Math.random() * 2 * Math.PI; // glow animation phase
     }
     reset(initial = false) {
       this.x = Math.random() * width;
       this.y = Math.random() * height;
-      const speed = 0.2 + Math.random() * 0.6; // slow smooth speeds
+      const speed = 0.25 + Math.random() * 0.45;
       const angle = Math.random() * Math.PI * 2;
-      this.vx = Math.cos(angle) * speed * (Math.random() * 0.6 + 0.6);
-      this.vy = Math.sin(angle) * speed * (Math.random() * 0.6 + 0.6);
-      this.r = (Math.random() * 1.4) + 0.5;
+      this.vx = Math.cos(angle) * speed;
+      this.vy = Math.sin(angle) * speed;
+      this.baseR = 0.8 + Math.random() * 1.2;
       const shade = 180 + Math.floor(Math.random() * 60);
-      this.color = `rgba(${shade},${shade},${shade},0.9)`;
-      if (!initial && (this.x < 0 || this.x > width || this.y < 0 || this.y > height)) {
-        // keep inside
-        this.x = Math.random() * width;
-        this.y = Math.random() * height;
-      }
+      this.color = `rgba(${shade},${shade},${shade},0.85)`;
     }
     move() {
       this.x += this.vx;
       this.y += this.vy;
-      // bounce edges smoothly
       if (this.x <= 0 || this.x >= width) this.vx *= -1;
       if (this.y <= 0 || this.y >= height) this.vy *= -1;
     }
-    draw(ctx) {
+    draw(ctx, time) {
+      const glow = Math.sin(time / 800 + this.phase) * 0.4 + 0.6;
+      const radius = this.baseR * glow * 1.2;
       ctx.beginPath();
-      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.arc(this.x, this.y, radius, 0, Math.PI * 2);
       ctx.fillStyle = this.color;
       ctx.fill();
     }
@@ -115,10 +104,8 @@
     particles = [];
     const count = getParticleCountForSize(width, height);
     for (let i = 0; i < count; i++) particles.push(new Particle());
-    console.log(`particle system: ${particles.length} particles`);
   }
 
-  // mouse subtle interaction
   const mouse = { x: null, y: null };
   window.addEventListener("mousemove", e => {
     mouse.x = e.clientX;
@@ -126,26 +113,25 @@
   });
   window.addEventListener("mouseout", () => { mouse.x = null; mouse.y = null; });
 
-  // main draw
-  function connectAndDraw() {
+  function connectAndDraw(time) {
     ctx.clearRect(0, 0, width, height);
 
-    // draw particles
+    // draw all particles
     for (const p of particles) {
       p.move();
-      p.draw(ctx);
+      p.draw(ctx, time);
     }
 
-    // connect
-    const len = particles.length;
-    for (let i = 0; i < len; i++) {
-      for (let j = i + 1; j < len; j++) {
+    // connect nearby particles
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
         const a = particles[i], b = particles[j];
-        const dx = a.x - b.x, dy = a.y - b.y;
-        const d = Math.hypot(dx, dy);
-        if (d < MAX_DISTANCE) {
-          const op = 1 - (d / MAX_DISTANCE);
-          ctx.strokeStyle = `rgba(255,255,255,${(op * 0.28).toFixed(3)})`;
+        const dx = a.x - b.x;
+        const dy = a.y - b.y;
+        const dist = Math.hypot(dx, dy);
+        if (dist < MAX_DISTANCE) {
+          const op = 1 - dist / MAX_DISTANCE;
+          ctx.strokeStyle = `rgba(255,255,255,${(op * 0.3).toFixed(3)})`;
           ctx.lineWidth = 1;
           ctx.beginPath();
           ctx.moveTo(a.x, a.y);
@@ -158,10 +144,10 @@
     // gentle mouse repulsion
     if (mouse.x !== null && mouse.y !== null) {
       for (const p of particles) {
-        const dx = p.x - mouse.x, dy = p.y - mouse.y;
+        const dx = p.x - mouse.x;
+        const dy = p.y - mouse.y;
         const d = Math.hypot(dx, dy);
         if (d < 120 && d > 0.1) {
-          // push slightly away
           const push = 0.02 * (1 - d / 120);
           p.x += dx * push;
           p.y += dy * push;
@@ -170,31 +156,17 @@
     }
   }
 
-  function animate() {
-    connectAndDraw();
+  function animate(time = 0) {
+    connectAndDraw(time);
     animationId = requestAnimationFrame(animate);
   }
 
-  // safety: draw a single dot if anything goes wrong
-  function debugDot() {
-    ctx.clearRect(0, 0, width, height);
-    ctx.fillStyle = 'rgba(255,255,255,0.6)';
-    ctx.beginPath();
-    ctx.arc(width / 2, height / 2, 4, 0, Math.PI * 2);
-    ctx.fill();
-    console.warn("Debug dot drawn — particle loop may not have started");
-  }
-
-  // initialize on load
-  window.addEventListener('load', () => {
+  window.addEventListener("load", () => {
     try {
       resize();
-      if (!particles || particles.length === 0) initParticles();
       animate();
     } catch (err) {
-      console.error("Particle init error:", err);
-      try { debugDot(); } catch (e) { /* ignore */ }
+      console.error("Particle initialization failed:", err);
     }
   });
-
 })();
