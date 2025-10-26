@@ -1,33 +1,48 @@
 // === Mayank Rana Portfolio Script ===
-// DevicePixelRatio-aware, high-density monochrome particle network + smooth scroll
+// DevicePixelRatio-aware, high-density monochrome particle network + smooth scroll (optimized for mobile)
 (function () {
   "use strict";
 
-  // ---------- SMOOTH SCROLL ----------
+  // ---------- SMOOTH SCROLL (optimized) ----------
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', e => {
-      e.preventDefault();
-      const target = document.querySelector(anchor.getAttribute('href'));
-      if (target) {
-        const start = window.pageYOffset;
-        const end = target.offsetTop - 70;
-        const distance = end - start;
-        const duration = 1000;
-        let startTime = null;
+      const href = anchor.getAttribute('href');
+      if (href && href.startsWith("#")) {
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) {
+          const offset = Math.max(target.offsetTop - 70, 0);
 
-        function easeInOutQuad(t) {
-          return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+          // Detect mobile/touch devices → use native smooth scroll
+          const isMobile = /Mobi|Android|iPhone|iPad|iPod|Opera Mini|IEMobile/i.test(navigator.userAgent);
+          if (isMobile && 'scrollBehavior' in document.documentElement.style) {
+            window.scrollTo({
+              top: offset,
+              behavior: "smooth"
+            });
+          } else {
+            // Desktop custom animation
+            const start = window.pageYOffset;
+            const distance = offset - start;
+            const duration = 900;
+            let startTime = null;
+
+            function easeInOutCubic(t) {
+              return t < 0.5
+                ? 4 * t * t * t
+                : 1 - Math.pow(-2 * t + 2, 3) / 2;
+            }
+
+            function step(currentTime) {
+              if (!startTime) startTime = currentTime;
+              const progress = Math.min((currentTime - startTime) / duration, 1);
+              const eased = easeInOutCubic(progress);
+              window.scrollTo(0, start + distance * eased);
+              if (progress < 1) requestAnimationFrame(step);
+            }
+            requestAnimationFrame(step);
+          }
         }
-
-        function step(currentTime) {
-          if (!startTime) startTime = currentTime;
-          const progress = Math.min((currentTime - startTime) / duration, 1);
-          const eased = easeInOutQuad(progress);
-          window.scrollTo(0, start + distance * eased);
-          if (progress < 1) requestAnimationFrame(step);
-        }
-
-        requestAnimationFrame(step);
       }
     });
   });
