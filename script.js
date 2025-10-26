@@ -176,12 +176,50 @@
     animationId = requestAnimationFrame(animate);
   }
 
+  // ---------- NEW: TYPEWRITER EFFECT ----------
+  function initTypewriter() {
+    const targetElement = document.getElementById("typewriter-hello");
+    if (!targetElement) return;
+
+    const textToType = "Hi! I’m Mayank";
+    let index = 0;
+    targetElement.innerHTML = ""; // Clear initial text
+
+    // Add cursor
+    const cursor = document.createElement("span");
+    cursor.className = "typewriter-cursor";
+    targetElement.appendChild(cursor);
+
+    function type() {
+      if (index < textToType.length) {
+        // Insert text before the cursor
+        targetElement.insertBefore(
+          document.createTextNode(textToType.charAt(index)),
+          cursor
+        );
+        index++;
+        setTimeout(type, 120); // Adjust speed here (in ms)
+      } else {
+        // Optional: make cursor stop blinking after typing
+        // cursor.style.animation = "none";
+      }
+    }
+    
+    // Start typing after a short delay
+    setTimeout(type, 500);
+  }
+
+  // ---------- INITIALIZATION ----------
   window.addEventListener("load", () => {
     try {
+      // Start particles
       resize();
       animate();
+      // Start typewriter
+      initTypewriter();
     } catch (err) {
-      console.error("Particle initialization failed:", err);
+      console.error("Initialization failed:", err);
     }
   });
+
 })();
