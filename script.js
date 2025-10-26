@@ -1,30 +1,7 @@
 // === Mayank Rana Portfolio Script ===
-// DevicePixelRatio-aware, high-density monochrome particle network + smooth scroll + fade + glow
+// DevicePixelRatio-aware, high-density monochrome particle network + smooth scroll (optimized for mobile)
 (function () {
   "use strict";
-
-  // ---------- FADE-IN ON SCROLL ----------
-  const fadeSections = document.querySelectorAll('.fade-section');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.15 });
-  fadeSections.forEach(sec => observer.observe(sec));
-
-  // ---------- CURSOR GLOW FOLLOW ----------
-  const root = document.documentElement;
-  document.addEventListener("mousemove", e => {
-    root.style.setProperty("--cursor-x", e.clientX + "px");
-    root.style.setProperty("--cursor-y", e.clientY + "px");
-    document.body.style.cursor = "none";
-    document.querySelector("body").style.setProperty("--cursor-x", `${e.clientX}px`);
-    document.querySelector("body").style.setProperty("--cursor-y", `${e.clientY}px`);
-    document.querySelector("body::before");
-  });
 
   // ---------- SMOOTH SCROLL (optimized) ----------
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -35,17 +12,25 @@
         const target = document.querySelector(href);
         if (target) {
           const offset = Math.max(target.offsetTop - 70, 0);
+
+          // Detect mobile/touch devices → use native smooth scroll
           const isMobile = /Mobi|Android|iPhone|iPad|iPod|Opera Mini|IEMobile/i.test(navigator.userAgent);
           if (isMobile && 'scrollBehavior' in document.documentElement.style) {
-            window.scrollTo({ top: offset, behavior: "smooth" });
+            window.scrollTo({
+              top: offset,
+              behavior: "smooth"
+            });
           } else {
+            // Desktop custom animation
             const start = window.pageYOffset;
             const distance = offset - start;
             const duration = 900;
             let startTime = null;
 
             function easeInOutCubic(t) {
-              return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+              return t < 0.5
+                ? 4 * t * t * t
+                : 1 - Math.pow(-2 * t + 2, 3) / 2;
             }
 
             function step(currentTime) {
@@ -74,9 +59,10 @@
   const MAX_DISTANCE = 130;
   let animationId = null;
 
+  // consistent particle density
   function getParticleCountForSize(w, h) {
     const area = w * h;
-    return Math.min(Math.floor(area / 7500), 240);
+    return Math.min(Math.floor(area / 7500), 240); // denser
   }
 
   function resize() {
@@ -100,7 +86,7 @@
   class Particle {
     constructor() {
       this.reset(true);
-      this.phase = Math.random() * 2 * Math.PI;
+      this.phase = Math.random() * 2 * Math.PI; // glow animation phase
     }
     reset(initial = false) {
       this.x = Math.random() * width;
@@ -145,11 +131,13 @@
   function connectAndDraw(time) {
     ctx.clearRect(0, 0, width, height);
 
+    // draw all particles
     for (const p of particles) {
       p.move();
       p.draw(ctx, time);
     }
 
+    // connect nearby particles
     for (let i = 0; i < particles.length; i++) {
       for (let j = i + 1; j < particles.length; j++) {
         const a = particles[i], b = particles[j];
@@ -168,6 +156,7 @@
       }
     }
 
+    // gentle mouse repulsion
     if (mouse.x !== null && mouse.y !== null) {
       for (const p of particles) {
         const dx = p.x - mouse.x;
