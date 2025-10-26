@@ -181,7 +181,8 @@
     const targetElement = document.getElementById("typewriter-hello");
     if (!targetElement) return;
 
-    const textToType = "Hi! I’m Mayank";
+    // UPDATED: Changed the text to be typed
+    const textToType = "HELLO, WORLD.";
     let index = 0;
     targetElement.innerHTML = ""; // Clear initial text
 
@@ -223,3 +224,4 @@
   });
 
 })();
+
